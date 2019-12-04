@@ -88,10 +88,10 @@ aux_predicado(F,S,[X|T],R):- aux_predicado(F,S,T,R).
 
 
 /*valoracoes que satisfazem 2 formulas (X e C)*/
-juntas_formulas([X|C],V,T):- F= X e C, predicado(F,V), simbolos_formula(F,T).
+juntas_formulas([X,C],V,T):- F =X e C, predicado(F,V), simbolos_formula(F,T).
 
 /*como parar? junta todas as formulas do conjunto em e */
-juntar_conjunto([],_).
-juntar_conjunto([H|T],S):- juntar_conjunto(T,G), S = H e G.
+juntar_conjunto([],S).
+juntar_conjunto([H,T],S):- juntar_conjunto(T,G), S = H e G.
 
 
