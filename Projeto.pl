@@ -1,12 +1,14 @@
 /*Projeto Lógica*/
 
-
+% Predicados auxiliares (conetivos)
 :-op(100, fy, 'neg').
 :-op(200, xfy, 'e').
 :-op(300, xfy, 'ou').
 :-op(400, xfy, 'imp').
 
-
+/* comprimento/2 é tal que comprimento(L,N) é verdadeiro se N é o 
+comprimento da lista L
+*/
 comprimento([], 0).
 comprimento([A|X], N):-comprimento(X, N1), N is N1+1.
 
