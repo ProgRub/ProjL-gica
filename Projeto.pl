@@ -6,7 +6,8 @@
 :-op(300, xfy, 'ou').
 :-op(400, xfy, 'imp').
 
-
+acrescenta(X,[],[X]).
+acrescenta(X,L,[X|L]).
 concatena([],L,L).
 concatena([X|R],L,[X|S]):- concatena(R,L,S).
 
@@ -58,10 +59,21 @@ todas_listas_0s_1s(N):- findall(L,list_n_0s_e_1s(N,L),R),write(R).
 
 
 simb_prop(F,F):- not(F = neg X), not(F = X e Y), not(F = X ou Y), not(F = X imp Y).
-simb_prop(neg F, Z) :- simb_prop(F,Z),.
-simb_prop(X e Y, T) :- simb_prop(X,U), simb_prop(Y,R), concatena(U,R,T).
-simb_prop(X ou Y, T) :- simb_prop(X,U), simb_prop(Y,R), concatena(U,R,T).
-simb_prop(X imp Y,T) :- simb_prop(X,U), simb_prop(Y,R), concatena(U,R,T).
+simb_prop(neg F, Z) :- simb_prop(F,Z).
+simb_prop(X e Y, X) :- simb_prop(X,X).
+simb_prop(X e Y, Y) :- simb_prop(Y,Y).
+simb_prop(X e Y,U) :- simb_prop(X,U).
+simb_prop(X e Y,I) :- simb_prop(Y,I).
+simb_prop(X ou Y, X) :- simb_prop(X,X).
+simb_prop(X ou Y, Y) :- simb_prop(Y,Y).
+simb_prop(X ou Y,U) :- simb_prop(X,U).
+simb_prop(X ou Y,I) :- simb_prop(Y,I).
+simb_prop(X imp Y, X) :- simb_prop(X,X).
+simb_prop(X imp Y, Y) :- simb_prop(Y,Y).
+simb_prop(X imp Y,U) :- simb_prop(X,U).
+simb_prop(X imp Y,I) :- simb_prop(Y,I).
 
-simbolos_prop([],[]).
-simbolos_prop([X|R],L) :- simb_prop(X).
+simbolos_formula(F,L) :- findall(U,simb_prop(F,U),T), eliminarep(T,L).
+
+simbolos_conjunto([],[]).
+simbolos_conjunto([F|R],L) :- simbolos_formula(F,T), simbolos_conjunto(R,U), concatena(T,U,Y), eliminarep(Y,L).
