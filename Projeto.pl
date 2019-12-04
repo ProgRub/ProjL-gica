@@ -18,6 +18,11 @@ comprimento([], 0).
 comprimento([A|X], N):-comprimento(X, N1), N is N1+1.
 
 
+eliminarep([],[]).
+eliminarep([X|R],S):- membro(X,R), eliminarep(R,S).
+eliminarep([X|R],[X|S]):- not(membro(X,R)), eliminarep(R,S).
+
+
 /* enesimo/3 é tal que enesimo(N,L,X) é verdadeiro se N é um número
 natural positivo e X é o elemento que está na posição N da lista L*/
 enesimo(1,[X|L],X).
