@@ -7,6 +7,9 @@
 :-op(400, xfy, 'imp').
 
 
+concatena([],L,L).
+concatena([X|R],L,[X|S]):- concatena(R,L,S).
+
 /* membro/2 é tal que membro(X,L) tem o valor verdadeiro se X pertence à lista L*/
 membro(X, [X | _]).
 membro(X, [_ | C]):-membro(X, C).
@@ -50,10 +53,10 @@ todas_listas_0s_1s(N):- findall(L,list_n_0s_e_1s(N,L),R),write(R).
 
 
 simb_prop(F,F):- not(F = neg X), not(F = X e Y), not(F = X ou Y), not(F = X imp Y).
-simb_prop(neg F, Z) :- simb_prop(F,Z).
-simb_prop(X e Y,) :- simb_prop(X), simb_prop(Y).
-simb_prop(X ou Y) :- simb_prop(X), simb_prop(Y).
-simb_prop(X imp Y) :- simb_prop(X), simb_prop(Y).
+simb_prop(neg F, Z) :- simb_prop(F,Z),.
+simb_prop(X e Y, T) :- simb_prop(X,U), simb_prop(Y,R), concatena(U,R,T).
+simb_prop(X ou Y, T) :- simb_prop(X,U), simb_prop(Y,R), concatena(U,R,T).
+simb_prop(X imp Y,T) :- simb_prop(X,U), simb_prop(Y,R), concatena(U,R,T).
 
 simbolos_prop([],[]).
 simbolos_prop([X|R],L) :- simb_prop(X).
