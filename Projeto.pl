@@ -59,7 +59,7 @@ lista_n_0s_e_1s(N,[0|L]):- N>0, N1 is N-1, lista_n_0s_e_1s(N1,L).
 lista_n_0s_e_1s(N,[1|L]):- N>0, N1 is N-1, lista_n_0s_e_1s(N1,L).
 
 
-todas_listas_0s_1s(N,R):- findall(L,lista_n_0s_e_1s(N,L),R), write(R).
+todas_listas_0s_1s(N,R):- findall(L,lista_n_0s_e_1s(N,L),R).
 
 /* simb_prop/2 é tal que sim_prop(Y,Y) é verdadeiro se Y é simbolo proposicional */
 simb_prop(F,F):- not(F = neg X), not(F = X e Y), not(F = X ou Y), not(F = X imp Y).
@@ -79,4 +79,19 @@ simbolos_formula(F,L) :- findall(U,simb_prop(F,U),T), eliminarep(T,L).
 lista de todos os simbolos proposicionais que ocorrem nalguma formula da lista de formulas L1*/
 simbolos_conjunto([],[]).
 simbolos_conjunto([F|R],L) :- simbolos_formula(F,T), simbolos_conjunto(R,U), concatena(T,U,Y), eliminarep(Y,L).
+
+
+predicado(F,V):- simbolos_formula(F,L), comprimento(L,N), todas_listas_0s_1s(N,R), findall(A,aux_predicado(F,L,R,A),V).
+
+aux_predicado(F,S,[X|T],X):- calc_valor(F,S,X,1).
+aux_predicado(F,S,[X|T],R):- aux_predicado(F,S,T,R).
+
+
+/*valoracoes que satisfazem 2 formulas (X e C)*/
+juntas_formulas([X|C],V,T):- F= X e C, predicado(F,V), simbolos_formula(F,T).
+
+/*como parar? junta todas as formulas do conjunto em e */
+juntar_conjunto([],_).
+juntar_conjunto([H|T],S):- juntar_conjunto(T,G), S = H e G.
+
 
