@@ -40,4 +40,5 @@ lista_n_0s_e_1s(N,[1|L]):- N>0, N1 is N-1, lista_n_0s_e_1s(N1,L).
 todas_listas_0s_1s(N):- findall(L,list_n_0s_e_1s(N,L),R),write(R).
 
 
-simb_prop(F):- not(F= neg X), not(F= X e Y), not(F = X ou Y).
+simb_prop(F):- not(F = neg X), not(F = X e Y), not(F = X ou Y).
+
