@@ -78,27 +78,47 @@ simb_prop(X imp Y,I) :- simb_prop(Y,I).
 os simbolos proposicionais da formula F*/
 simbolos_formula(F,L) :- findall(U,simb_prop(F,U),T), eliminarep(T,L).
 
-/*simbolos_conjunto/2 é tal que simbolos_conjunto(L1,L2) sendo L2 a 
+/*simbolos_conjunto/2 é tal que simbolos_conjunto(L1,L2) é verdadeiro se L2 é a 
 lista de todos os simbolos proposicionais que ocorrem nalguma formula da lista de formulas L1*/
 simbolos_conjunto([],[]).
 simbolos_conjunto([F|R],L) :- simbolos_formula(F,T), simbolos_conjunto(R,U), concatena(T,U,Y), eliminarep(Y,L).
 
+/*todas_valoracoes_satisfazem/2 é tal que todas_valoracoes_satisfazem(F,V) é verdadeiro se V é 
+a lista de todas as valoracoes que satisfazem a formula F*/
+todas_valoracoes_satisfazem(F,V):- simbolos_formula(F,L), comprimento(L,N), todas_listas_0s_1s(N,R), findall(A,valoracao_satisfaz(F,L,R,A),V).
 
-todas_valoracoes_satisfazem(F,[],V):- simbolos_formula(F,L), comprimento(L,N), todas_listas_0s_1s(N,R), findall(A,valoracao_satisfaz(F,L,R,A),V).
-todas_valoracoes_satisfazem(F,T,V):- simbolos_formula(F,L), findall(A, valoracao_satisfaz(F,L,T,A),V).
-
+/*valoracao_satisfaz/4 é tal que valoracao_satisfaz(F,S,L,V) é verdadeiro se V é uma valoracao de
+L que satisfaz a formula F, S é a lista de simbolos proposicionais de F.*/
 valoracao_satisfaz(F,S,[X|T],X):- calc_valor(F,S,X,1).
 valoracao_satisfaz(F,S,[X|T],R):- valoracao_satisfaz(F,S,T,R).
 
 
-/*valoracoes que satisfazem 2 formulas (X e C)*/
-juntas_formulas([],V,T).
-juntas_formulas([X,C],V,T):- juntar_conjunto([X,C],F), predicado(F,V), simbolos_formula(F,T).
-
-
-/*como parar? junta todas as formulas do conjunto em e */
+/*juntar_conjunto/2 é tal que juntar_conjunto(L,V) é verdadeiro se V é a formula que se obtem
+de concatenar todas as formulas da lista L com e´s */
 juntar_conjunto([X|[]],X).
 juntar_conjunto([H|R],P):- juntar_conjunto(R,T),P= H e T.
 
-valoracoes_satisfazem_conjunto(L,C,V) :- simbolos_conjunto(L,C), juntar_conjunto(L,F), todas_valoracoes_satisfazem(F,[],V).
+
+/* ***********Exercicio 1*********** */
+valoracoes_satisfazem_conjunto(L,C,V) :- simbolos_conjunto(L,C), juntar_conjunto(L,F), todas_valoracoes_satisfazem(F,V).
+
+
+
+
+
+elimina(X,[],[]).
+elimina(X,[X|L],L1):- elimina(X,L,L1).
+elimina(X,[Y|L],[Y|L1]):- not(Y=X), elimina(X,L,L1).
+
+
+
+predicado([X|F],C):- (membro(X,C) -> predicado(F,C), write("É consequencia semantica");write("Não é consequencia semantica.")).
+% predicado([X|F],C):- not(membro(X,C)), write("Não é consequencia semantica."),!.
+
+auxiliar([],L,L).
+auxiliar([X|R],T,L):- elimina(X,T,P), auxiliar(R,P,L).
+
+%X=Y, auxiliar(R,T)
+
+conseq_semantica(L,F):- juntar_conjunto(L,V), J= V imp F, todas_valoracoes_satisfazem(J,T), simbolos_formula(J,Q),comprimento(Q,N), todas_listas_0s_1s(N,E), auxiliar(T,E,O),(O=[] -> write("E consequencia semantica"); write("Nao e consequencia semantica"),nl,write(Q),nl,write(O)).
 
