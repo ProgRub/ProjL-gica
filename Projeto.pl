@@ -81,10 +81,10 @@ simbolos_conjunto([],[]).
 simbolos_conjunto([F|R],L) :- simbolos_formula(F,T), simbolos_conjunto(R,U), concatena(T,U,Y), eliminarep(Y,L).
 
 
-predicado(F,V):- simbolos_formula(F,L), comprimento(L,N), todas_listas_0s_1s(N,R), findall(A,aux_predicado(F,L,R,A),V).
+todas_valoracoes_satisfazem(F,V):- simbolos_formula(F,L), comprimento(L,N), todas_listas_0s_1s(N,R), findall(A,aux_predicado(F,L,R,A),V).
 
-aux_predicado(F,S,[X|T],X):- calc_valor(F,S,X,1).
-aux_predicado(F,S,[X|T],R):- aux_predicado(F,S,T,R).
+valoracao_satisfaz(F,S,[X|T],X):- calc_valor(F,S,X,1).
+valoracao_satisfaz(F,S,[X|T],R):- aux_predicado(F,S,T,R).
 
 
 /*valoracoes que satisfazem 2 formulas (X e C)*/
