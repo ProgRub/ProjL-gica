@@ -1,13 +1,28 @@
 /*Projeto Lógica*/
 
+/* 
+Elementos do grupo:
+Diego Andrés da Silva Briceño (2043818),
+Filipe Orlando Namora Gomes (2045218),
+José Alejandro Ferreira Gouveia (2028616),
+Rúben José Gouveia Rodrigues (2046018)
+*/
+
+
 % Predicados auxiliares (conetivos)
 :-op(100, fy, 'neg').
 :-op(200, xfy, 'e').
 :-op(300, xfy, 'ou').
 :-op(400, xfy, 'imp').
 
+
+/*acrescenta/3 é tal que acrescenta(X,L1,L2) tem o valor verdadeiro se L2 é a lista que
+ resulta de colocar o elemento X na cabeça da lista L1*/
 acrescenta(X,[],[X]).
 acrescenta(X,L,[X|L]).
+
+/*concatena/3 é tal que concatena(L1,L2,L3) é verdadeiro se L3 é a lista que resulta de
+juntar as listas L1 e L2*/
 concatena([],L,L).
 concatena([X|R],L,[X|S]):- concatena(R,L,S).
 
@@ -21,7 +36,8 @@ comprimento da lista L*/
 comprimento([], 0).
 comprimento([A|X], N):-comprimento(X, N1), N is N1+1.
 
-
+/*eliminarep/2 é tal que eliminarep(X,Y) é verdadeiro se Y é a lista que resulta de retirar
+da lista X todos exceto a ultima ocorrencia de cada um dos seus elementos*/
 eliminarep([],[]).
 eliminarep([X|R],S):- membro(X,R), eliminarep(R,S).
 eliminarep([X|R],[X|S]):- not(membro(X,R)), eliminarep(R,S).
@@ -74,6 +90,7 @@ simb_prop(X ou Y,I) :- simb_prop(Y,I).
 simb_prop(X imp Y,U) :- simb_prop(X,U).
 simb_prop(X imp Y,I) :- simb_prop(Y,I).
 
+
 /*simbolos_formula/2 é tal que simbolos_formula(F,L) sendo L a lista com todos 
 os simbolos proposicionais da formula F*/
 simbolos_formula(F,L) :- findall(U,simb_prop(F,U),T), eliminarep(T,L).
@@ -98,27 +115,27 @@ de concatenar todas as formulas da lista L com e´s */
 juntar_conjunto([X|[]],X).
 juntar_conjunto([H|R],P):- juntar_conjunto(R,T),P= H e T.
 
-
-/* ***********Exercicio 1*********** */
+/* ************** Exercicio 2 ************** */
+/*valoracoes_satisfazem_conjunto/3 é tal que valoracoes_satisfazem_conjunto(L,C,V) é verdadeiro se V é a lista de 
+todas valoracoes que satisfazem a formula que resulta de concatenar todas as formulas de L com a formula C*/
 valoracoes_satisfazem_conjunto(L,C,V) :- simbolos_conjunto(L,C), juntar_conjunto(L,F), todas_valoracoes_satisfazem(F,V).
 
 
+/* -------------------------------------------------------*/
 
-
-
+/*elimina/3 é tal que elimina(X,L1,L2) é verdadeiro se L2 é a lista que resulta de retirar 
+da lista L1 todas as ocorrências do elemento X*/
 elimina(X,[],[]).
 elimina(X,[X|L],L1):- elimina(X,L,L1).
 elimina(X,[Y|L],[Y|L1]):- not(Y=X), elimina(X,L,L1).
 
+/*elimina_lista/3 é tal que elimina_lista(X,Y,L) é verdadeiro se L é a lista que resulta de retirar
+da lista Y todas as ocorrências dos elementos da lista X*/
+elimina_lista([],L,L).
+elimina_lista([X|R],T,L):- elimina(X,T,P), elimina_lista(R,P,L).
 
 
-predicado([X|F],C):- (membro(X,C) -> predicado(F,C), write("É consequencia semantica");write("Não é consequencia semantica.")).
-% predicado([X|F],C):- not(membro(X,C)), write("Não é consequencia semantica."),!.
 
-auxiliar([],L,L).
-auxiliar([X|R],T,L):- elimina(X,T,P), auxiliar(R,P,L).
-
-%X=Y, auxiliar(R,T)
-
-conseq_semantica(L,F):- juntar_conjunto(L,V), J= V imp F, todas_valoracoes_satisfazem(J,T), simbolos_formula(J,Q),comprimento(Q,N), todas_listas_0s_1s(N,E), auxiliar(T,E,O),(O=[] -> write("E consequencia semantica"); write("Nao e consequencia semantica"),nl,write(Q),nl,write(O)).
+/* ************** Exercicio 2 ************** */
+conseq_semantica(L,F):- juntar_conjunto(L,V), J= V imp F, todas_valoracoes_satisfazem(J,T), simbolos_formula(J,Q),comprimento(Q,N), todas_listas_0s_1s(N,E), elimina_lista(T,E,O),(O=[] -> write("E consequencia semantica"); write("Nao e consequencia semantica"),nl,write(Q),nl,write(O)),!.
 
