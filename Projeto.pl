@@ -115,7 +115,7 @@ de concatenar todas as formulas da lista L com e´s */
 juntar_conjunto([X|[]],X).
 juntar_conjunto([H|R],P):- juntar_conjunto(R,T),P= H e T.
 
-/* ************** Exercicio 2 ************** */
+/* ************** Exercicio 1 ************** */
 /*valoracoes_satisfazem_conjunto/3 é tal que valoracoes_satisfazem_conjunto(L,C,V) é verdadeiro se V é a lista de 
 todas valoracoes que satisfazem a formula que resulta de concatenar todas as formulas de L com a formula C*/
 valoracoes_satisfazem_conjunto(L,C,V) :- simbolos_conjunto(L,C), juntar_conjunto(L,F), todas_valoracoes_satisfazem(F,V).
@@ -139,3 +139,6 @@ elimina_lista([X|R],T,L):- elimina(X,T,P), elimina_lista(R,P,L).
 /* ************** Exercicio 2 ************** */
 conseq_semantica(L,F):- juntar_conjunto(L,V), J= V imp F, todas_valoracoes_satisfazem(J,T), simbolos_formula(J,Q),comprimento(Q,N), todas_listas_0s_1s(N,E), elimina_lista(T,E,O),(O=[] -> write("E consequencia semantica"); write("Nao e consequencia semantica"),nl,write(Q),nl,write(O)),!.
 
+
+
+/* -------------------------------------------------------*/
