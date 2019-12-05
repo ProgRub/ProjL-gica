@@ -81,10 +81,11 @@ simbolos_conjunto([],[]).
 simbolos_conjunto([F|R],L) :- simbolos_formula(F,T), simbolos_conjunto(R,U), concatena(T,U,Y), eliminarep(Y,L).
 
 
-todas_valoracoes_satisfazem(F,V):- simbolos_formula(F,L), comprimento(L,N), todas_listas_0s_1s(N,R), findall(A,aux_predicado(F,L,R,A),V).
+todas_valoracoes_satisfazem(F,[],V):- simbolos_formula(F,L), comprimento(L,N), todas_listas_0s_1s(N,R), findall(A,valoracao_satisfaz(F,L,R,A),V).
+todas_valoracoes_satisfazem(F,T,V):- simbolos_formula(F,L), findall(A, valoracao_satisfaz(F,L,T,A),V).
 
 valoracao_satisfaz(F,S,[X|T],X):- calc_valor(F,S,X,1).
-valoracao_satisfaz(F,S,[X|T],R):- aux_predicado(F,S,T,R).
+valoracao_satisfaz(F,S,[X|T],R):- valoracao_satisfaz(F,S,T,R).
 
 
 /*valoracoes que satisfazem 2 formulas (X e C)*/
@@ -94,4 +95,6 @@ juntas_formulas([X,C],V,T):- F =X e C, predicado(F,V), simbolos_formula(F,T).
 juntar_conjunto([],S).
 juntar_conjunto([H,T],S):- juntar_conjunto(T,G), S = H e G.
 
+valoracoes_satisfazem_conjunto([F|R],[],V) :- todas_valoracoes_satisfazem(F,[],L), valoracoes_satisfazem_conjunto(R,L,V).
+valoracoes_satisfazem_conjunto([F|R],T,V) :- todas_valoracoes_satisfazem(F,T,L), valoracoes_satisfazem_conjunto(R,L,V).
 
