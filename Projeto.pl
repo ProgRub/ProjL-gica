@@ -97,9 +97,8 @@ juntas_formulas([X,C],V,T):- juntar_conjunto([X,C],F), predicado(F,V), simbolos_
 
 
 /*como parar? junta todas as formulas do conjunto em e */
-juntar_conjunto([],S).
-juntar_conjunto([H,T],S):- S= H e T,!, juntar_conjunto([S,T],P).
+juntar_conjunto([X|[]],X).
+juntar_conjunto([H|R],P):- juntar_conjunto(R,T),P= H e T.
 
-valoracoes_satisfazem_conjunto([F|R],[],V) :- todas_valoracoes_satisfazem(F,[],L), valoracoes_satisfazem_conjunto(R,L,V).
-valoracoes_satisfazem_conjunto([F|R],T,V) :- todas_valoracoes_satisfazem(F,T,L), valoracoes_satisfazem_conjunto(R,L,V).
+valoracoes_satisfazem_conjunto(L,C,V) :- simbolos_conjunto(L,C), juntar_conjunto(L,F), todas_valoracoes_satisfazem(F,[],V).
 
