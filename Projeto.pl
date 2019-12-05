@@ -59,6 +59,9 @@ lista_n_0s_e_1s(N,[0|L]):- N>0, N1 is N-1, lista_n_0s_e_1s(N1,L).
 lista_n_0s_e_1s(N,[1|L]):- N>0, N1 is N-1, lista_n_0s_e_1s(N1,L).
 
 
+/*todas_listas_0s_1s/2 é tal que todas_listas_0s_1s(N,L) recebe um número inteiro 
+não negativo N e devolve a lista L constituida por todas as listas de comprimento N
+constituidas por Os e 1s.*/
 todas_listas_0s_1s(N,R):- findall(L,lista_n_0s_e_1s(N,L),R).
 
 /* simb_prop/2 é tal que sim_prop(Y,Y) é verdadeiro se Y é simbolo proposicional */
@@ -88,10 +91,12 @@ aux_predicado(F,S,[X|T],R):- aux_predicado(F,S,T,R).
 
 
 /*valoracoes que satisfazem 2 formulas (X e C)*/
-juntas_formulas([X,C],V,T):- F =X e C, predicado(F,V), simbolos_formula(F,T).
+juntas_formulas([],V,T).
+juntas_formulas([X,C],V,T):- juntar_conjunto([X,C],F), predicado(F,V), simbolos_formula(F,T).
+
 
 /*como parar? junta todas as formulas do conjunto em e */
 juntar_conjunto([],S).
-juntar_conjunto([H,T],S):- juntar_conjunto(T,G), S = H e G.
+juntar_conjunto([H,T],S):- S= H e T,!, juntar_conjunto([S,T],P).
 
 
