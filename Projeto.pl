@@ -1,6 +1,6 @@
 /*Projeto Lógica*/
 
-/* 
+/*
 Elementos do grupo:
 Diego Andrés da Silva Briceño (2043818),
 Filipe Orlando Namora Gomes (2045218),
@@ -31,7 +31,7 @@ membro(X, [X | _]).
 membro(X, [_ | C]):-membro(X, C).
 
 
-/* comprimento/2 é tal que comprimento(L,N) é verdadeiro se N é o 
+/* comprimento/2 é tal que comprimento(L,N) é verdadeiro se N é o
 comprimento da lista L*/
 comprimento([], 0).
 comprimento([A|X], N):-comprimento(X, N1), N is N1+1.
@@ -49,12 +49,12 @@ enesimo(1,[X|L],X).
 enesimo(N,[X|L],Y):-enesimo(N1,L,Y), N is N1+1.
 
 
-/* calc_valor/4 é tal que ao executar uma consulta do tipo 
+/* calc_valor/4 é tal que ao executar uma consulta do tipo
 calc_valor(F,S,L,V) onde F é uma fórmula da Linguagem neg, e, ou e imp,
 S é uma lista, sem repetições, dos símbolos proposicionais que ocorrem
 em dita fórmula e L uma lista de 0s e 1s com o mesmo comprimento da lista
 S, o interpretador Prolog devolverá V, o valor lógico de F por qualquer
-valoração v que atribui a cada símbolo proposicional da lista S o valor 
+valoração v que atribui a cada símbolo proposicional da lista S o valor
 lógico que ocorre na posição correspondente na lista L*/
 calc_valor(F,L1,L2,V):- enesimo(N,L1,F), enesimo(N,L2,V).
 calc_valor(neg X,L1,L2,0):- calc_valor(X,L1,L2,1).
@@ -75,7 +75,7 @@ lista_n_0s_e_1s(N,[0|L]):- N>0, N1 is N-1, lista_n_0s_e_1s(N1,L).
 lista_n_0s_e_1s(N,[1|L]):- N>0, N1 is N-1, lista_n_0s_e_1s(N1,L).
 
 
-/*todas_listas_0s_1s/2 é tal que todas_listas_0s_1s(N,L) recebe um número inteiro 
+/*todas_listas_0s_1s/2 é tal que todas_listas_0s_1s(N,L) recebe um número inteiro
 não negativo N e devolve a lista L constituida por todas as listas de comprimento N
 constituidas por Os e 1s.*/
 todas_listas_0s_1s(N,R):- findall(L,lista_n_0s_e_1s(N,L),R).
@@ -91,16 +91,16 @@ simb_prop(X imp Y,U) :- simb_prop(X,U).
 simb_prop(X imp Y,I) :- simb_prop(Y,I).
 
 
-/*simbolos_formula/2 é tal que simbolos_formula(F,L) é verdadeiro se L é a lista com todos 
+/*simbolos_formula/2 é tal que simbolos_formula(F,L) é verdadeiro se L é a lista com todos
 os simbolos proposicionais da formula F*/
 simbolos_formula(F,L) :- findall(U,simb_prop(F,U),T), eliminarep(T,L).
 
-/*simbolos_conjunto/2 é tal que simbolos_conjunto(L1,L2) é verdadeiro se L2 é a 
+/*simbolos_conjunto/2 é tal que simbolos_conjunto(L1,L2) é verdadeiro se L2 é a
 lista de todos os simbolos proposicionais que ocorrem nalguma formula da lista de formulas L1*/
 simbolos_conjunto([],[]).
 simbolos_conjunto([F|R],L) :- simbolos_formula(F,T), simbolos_conjunto(R,U), concatena(T,U,Y), eliminarep(Y,L).
 
-/*todas_valoracoes_satisfazem/2 é tal que todas_valoracoes_satisfazem(F,V) é verdadeiro se V é 
+/*todas_valoracoes_satisfazem/2 é tal que todas_valoracoes_satisfazem(F,V) é verdadeiro se V é
 a lista de todas as valoracoes que satisfazem a formula F*/
 todas_valoracoes_satisfazem(F,V):- simbolos_formula(F,L), comprimento(L,N), todas_listas_0s_1s(N,R), findall(A,valoracao_satisfaz(F,L,R,A),V).
 
@@ -116,14 +116,14 @@ juntar_conjunto([X|[]],X).
 juntar_conjunto([H|R],P):- juntar_conjunto(R,T),P= H e T.
 
 /* ************** Exercicio 1 ************** */
-/*valoracoes_satisfazem_conjunto/3 é tal que valoracoes_satisfazem_conjunto(L,C,V) é verdadeiro se V é a lista de 
+/*valoracoes_satisfazem_conjunto/3 é tal que valoracoes_satisfazem_conjunto(L,C,V) é verdadeiro se V é a lista de
 todas valoracoes que satisfazem a formula que resulta de concatenar todas as formulas de L com a formula C*/
 valoracoes_satisfazem_conjunto(L,C,V) :- simbolos_conjunto(L,C), juntar_conjunto(L,F), todas_valoracoes_satisfazem(F,V).
 
 
 /* -------------------------------------------------------*/
 
-/*elimina/3 é tal que elimina(X,L1,L2) é verdadeiro se L2 é a lista que resulta de retirar 
+/*elimina/3 é tal que elimina(X,L1,L2) é verdadeiro se L2 é a lista que resulta de retirar
 da lista L1 todas as ocorrências do elemento X*/
 elimina(X,[],[]).
 elimina(X,[X|L],L1):- elimina(X,L,L1).
@@ -152,10 +152,13 @@ junta_elem_listaconj(E,[X|R],[[E|X]|S]):- junta_elem_listaconj(E,R,S).
 partes([],[[]]).
 partes([X|R],P) :- partes(R,S), junta_elem_listaconj(X,S,T), concatena(S,T,P).
 
+/* igual ao conseq_semantica mas não imprime aquele texto*/
+aux_conseq_semantica([],F):- todas_valoracoes_satisfazem(F,T), simbolos_formula(F,Q),comprimento(Q,N), todas_listas_0s_1s(N,E), elimina_lista(T,E,O), O=[].
+aux_conseq_semantica(L,F):- juntar_conjunto(L,V), J= V imp F, todas_valoracoes_satisfazem(J,T), simbolos_formula(J,Q),comprimento(Q,N), todas_listas_0s_1s(N,E), elimina_lista(T,E,O),O=[].
 
-predicado(C,F,V):- partes(C,P),todas_conseq_semantica(P,F,V),write(V).
+predicado(C,F,V):- partes(C,P),todas_conseq_semantica(P,F,V).
 todas_conseq_semantica([],_,[]).
-todas_conseq_semantica([X|R], F, [X|T]) :- conseq_semantica(X,F), todas_conseq_semantica(R,F,T).
+todas_conseq_semantica([X|R], F, [X|T]) :- aux_conseq_semantica(X,F), todas_conseq_semantica(R,F,T).
 todas_conseq_semantica([X|R],F,T) :- todas_conseq_semantica(R,F,T).
 
 
@@ -168,4 +171,7 @@ predicado([X|[]],[X]).
 predicado([X|R],L) :- membro_listas(X,R,Y),!,elimina(Y,R,T), predicado([X|T],Q), concatena([X],Q,E),eliminarep(E,L).
 predicado([X|R],L) :- predicado(R,L).
 
-minimais(C,F,L) :- predicado(C,F,T),predicado(T,L).
+minimais(C,F,L) :- predicado(C,F,T), predicado(T,L).
+
+exercicio3(C,F,L):- (minimais(C,F,L) -> write("O conjunto de todos os subconjuntos minimais de "), write(C), write(" dos quais '"), write(F), write("' e consequencia semantica sao: "),nl, write(L); write("Nao existe nenhum subconjunto de "), write(C), write(" que tenha como consequencia semantica a formula '"), write(F), write("'.")).
+
