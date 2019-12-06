@@ -152,7 +152,7 @@ junta_elem_listaconj(E,[X|R],[[E|X]|S]):- junta_elem_listaconj(E,R,S).
 partes([],[[]]).
 partes([X|R],P) :- partes(R,S), junta_elem_listaconj(X,S,T), concatena(S,T,P).
 
-subconjuntos_conjunto(C,P) :- partes(C,P).
+
 predicado(C,F,V):- partes(C,P),todas_conseq_semantica(P,F,V),write(V).
 todas_conseq_semantica([],_,[]).
 todas_conseq_semantica([X|R], F, [X|T]) :- conseq_semantica(X,F), todas_conseq_semantica(R,F,T).
