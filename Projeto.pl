@@ -159,8 +159,8 @@ todas_conseq_semantica([X|R], F, [X|T]) :- conseq_semantica(X,F), todas_conseq_s
 todas_conseq_semantica([X|R],F,T) :- todas_conseq_semantica(R,F,T).
 
 
-
-membro_listas([X|R],[Y|L],Y) :- membro(X,Y),membro_listas(R,Y,Y).
+membro_listas([],_,_).
+membro_listas([X|R],[Y|L],Y) :- membro(X,Y),membro_listas(R,[Y|L],Y).
 membro_listas([X|R],[_|L],Y) :- membro_listas([X|R],L,Y).
 
 
