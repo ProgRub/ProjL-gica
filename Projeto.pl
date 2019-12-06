@@ -153,8 +153,19 @@ partes([],[[]]).
 partes([X|R],P) :- partes(R,S), junta_elem_listaconj(X,S,T), concatena(S,T,P).
 
 subconjuntos_conjunto(C,P) :- partes(C,P).
-predicado(C,F,P,V):- partes(C,P), write(P),todas_conseq_semantica(P,F,V),write(V).
+predicado(C,F,V):- partes(C,P),todas_conseq_semantica(P,F,V),write(V).
 todas_conseq_semantica([],_,[]).
 todas_conseq_semantica([X|R], F, [X|T]) :- conseq_semantica(X,F), todas_conseq_semantica(R,F,T).
 todas_conseq_semantica([X|R],F,T) :- todas_conseq_semantica(R,F,T).
 
+
+
+membro_listas([X|R],[Y|L],Y) :- membro(X,Y),membro_listas(R,Y,Y).
+membro_listas([X|R],[_|L],Y) :- membro_listas([X|R],L,Y).
+
+
+predicado([X|[]],[X]).
+predicado([X|R],L) :- membro_listas(X,R,Y),!,elimina(Y,R,T), predicado([X|T],Q), concatena([X],Q,E),eliminarep(E,L).
+predicado([X|R],L) :- predicado(R,L).
+
+minimais(C,F,L) :- predicado(C,F,T),predicado(T,L).
