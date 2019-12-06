@@ -91,7 +91,7 @@ simb_prop(X imp Y,U) :- simb_prop(X,U).
 simb_prop(X imp Y,I) :- simb_prop(Y,I).
 
 
-/*simbolos_formula/2 é tal que simbolos_formula(F,L) sendo L a lista com todos 
+/*simbolos_formula/2 é tal que simbolos_formula(F,L) é verdadeiro se L é a lista com todos 
 os simbolos proposicionais da formula F*/
 simbolos_formula(F,L) :- findall(U,simb_prop(F,U),T), eliminarep(T,L).
 
@@ -105,7 +105,7 @@ a lista de todas as valoracoes que satisfazem a formula F*/
 todas_valoracoes_satisfazem(F,V):- simbolos_formula(F,L), comprimento(L,N), todas_listas_0s_1s(N,R), findall(A,valoracao_satisfaz(F,L,R,A),V).
 
 /*valoracao_satisfaz/4 é tal que valoracao_satisfaz(F,S,L,V) é verdadeiro se V é uma valoracao de
-L que satisfaz a formula F, S é a lista de simbolos proposicionais de F.*/
+L que satisfaz a formula F, sendo S a lista de simbolos proposicionais de F.*/
 valoracao_satisfaz(F,S,[X|T],X):- calc_valor(F,S,X,1).
 valoracao_satisfaz(F,S,[X|T],R):- valoracao_satisfaz(F,S,T,R).
 
