@@ -138,7 +138,8 @@ elimina_lista([X|R],T,L):- elimina(X,T,P), elimina_lista(R,P,L).
 
 /* ************** Exercicio 2 ************** */
 /*conseq_semantica/2 é tal que conseq_semantica(L,F) é verdadeiro se F é consequencia semantica do conjunto de formulas L*/
-conseq_semantica(L,F):- juntar_conjunto(L,V), J= V imp F, todas_valoracoes_satisfazem(J,T), simbolos_formula(J,Q),comprimento(Q,N), todas_listas_0s_1s(N,E), elimina_lista(T,E,O),(O=[] -> write("E consequencia semantica"); write("Nao e consequencia semantica"),nl,write(Q),nl,write(O)),!.
+conseq_semantica([],F):- todas_valoracoes_satisfazem(F,T), simbolos_formula(F,Q),comprimento(Q,N), todas_listas_0s_1s(N,E), elimina_lista(T,E,O),O=[],(O=[] -> write("E consequencia semantica"),nl,write([]),nl; write("Nao e consequencia semantica"),nl,write(Q),nl,write(O)),!.
+conseq_semantica(L,F):- juntar_conjunto(L,V), J= V imp F, todas_valoracoes_satisfazem(J,T), simbolos_formula(J,Q),comprimento(Q,N), todas_listas_0s_1s(N,E), elimina_lista(T,E,O),O=[],(O=[] -> write("E consequencia semantica"),nl,write(L),nl; write("Nao e consequencia semantica"),nl,write(Q),nl,write(O)),!.
 
 
 /* -------------------------------------------------------*/
@@ -149,5 +150,11 @@ junta_elem_listaconj(E,[X|R],[[E|X]|S]):- junta_elem_listaconj(E,R,S).
 
 /*partes/2 é tal que partes(L,P) é verdadeiro se P é o conjunto das partes do conjunto L*/
 partes([],[[]]).
-partes([X|R],P):- partes(R,S), junta_elem_listaconj(X,S,T), concatena(S,T,P).
+partes([X|R],P) :- partes(R,S), junta_elem_listaconj(X,S,T), concatena(S,T,P).
+
+subconjuntos_conjunto(C,P) :- partes(C,P).
+predicado(C,F,P,V):- partes(C,P), write(P),todas_conseq_semantica(P,F,V),write(V).
+todas_conseq_semantica([],_,[]).
+todas_conseq_semantica([X|R], F, [X|T]) :- conseq_semantica(X,F), todas_conseq_semantica(R,F,T).
+todas_conseq_semantica([X|R],F,T) :- todas_conseq_semantica(R,F,T).
 
