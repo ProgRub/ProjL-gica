@@ -34,7 +34,7 @@ membro(X, [_ | C]):-membro(X, C).
 /* comprimento/2 é tal que comprimento(L,N) é verdadeiro se N é o
 comprimento da lista L*/
 comprimento([], 0).
-comprimento([A|X], N):-comprimento(X, N1), N is N1+1.
+comprimento([_|X], N):-comprimento(X, N1), N is N1+1.
 
 /*eliminarep/2 é tal que eliminarep(X,Y) é verdadeiro se Y é a lista que resulta de retirar
 da lista X todos exceto a ultima ocorrencia de cada um dos seus elementos*/
@@ -45,8 +45,8 @@ eliminarep([X|R],[X|S]):- not(membro(X,R)), eliminarep(R,S).
 
 /* enesimo/3 é tal que enesimo(N,L,X) é verdadeiro se N é um número
 natural positivo e X é o elemento que está na posição N da lista L*/
-enesimo(1,[X|L],X).
-enesimo(N,[X|L],Y):-enesimo(N1,L,Y), N is N1+1.
+enesimo(1,[X|_],X).
+enesimo(N,[_|L],Y):-enesimo(N1,L,Y), N is N1+1.
 
 
 /* calc_valor/4 é tal que ao executar uma consulta do tipo
@@ -83,12 +83,12 @@ todas_listas_0s_1s(N,R):- findall(L,lista_n_0s_e_1s(N,L),R).
 /* simb_prop/2 é tal que sim_prop(Y,Y) é verdadeiro se Y é simbolo proposicional */
 simb_prop(F,F):- not(F = neg X), not(F = X e Y), not(F = X ou Y), not(F = X imp Y).
 simb_prop(neg F, Z) :- simb_prop(F,Z).
-simb_prop(X e Y,U) :- simb_prop(X,U).
-simb_prop(X e Y,I) :- simb_prop(Y,I).
-simb_prop(X ou Y,U) :- simb_prop(X,U).
-simb_prop(X ou Y,I) :- simb_prop(Y,I).
-simb_prop(X imp Y,U) :- simb_prop(X,U).
-simb_prop(X imp Y,I) :- simb_prop(Y,I).
+simb_prop(X e _,U) :- simb_prop(X,U).
+simb_prop(_ e Y,I) :- simb_prop(Y,I).
+simb_prop(X ou _,U) :- simb_prop(X,U).
+simb_prop(_ ou Y,I) :- simb_prop(Y,I).
+simb_prop(X imp _,U) :- simb_prop(X,U).
+simb_prop(_ imp Y,I) :- simb_prop(Y,I).
 
 
 /*simbolos_formula/2 é tal que simbolos_formula(F,L) é verdadeiro se L é a lista com todos
@@ -106,8 +106,8 @@ todas_valoracoes_satisfazem(F,V):- simbolos_formula(F,L), comprimento(L,N), toda
 
 /*valoracao_satisfaz/4 é tal que valoracao_satisfaz(F,S,L,V) é verdadeiro se V é uma valoracao de
 L que satisfaz a formula F, sendo S a lista de simbolos proposicionais de F.*/
-valoracao_satisfaz(F,S,[X|T],X):- calc_valor(F,S,X,1).
-valoracao_satisfaz(F,S,[X|T],R):- valoracao_satisfaz(F,S,T,R).
+valoracao_satisfaz(F,S,[X|_],X):- calc_valor(F,S,X,1).
+valoracao_satisfaz(F,S,[_|T],R):- valoracao_satisfaz(F,S,T,R).
 
 
 /*juntar_conjunto/2 é tal que juntar_conjunto(L,V) é verdadeiro se V é a formula que se obtem
@@ -118,7 +118,7 @@ juntar_conjunto([H|R],P):- juntar_conjunto(R,T),P= H e T.
 
 imprime_valoracoes(L,L,[]).
 imprime_valoracoes([],[],[]).
-imprime_valoracoes(L,[X|R],[[V1|V2]|O]):- write("v("), write(X), write(") = "), write(V1), (not(V2=[]) -> write(" e "),imprime_valoracoes(L,R,[V2|O]); (not(O=[]) -> nl, write(" ou "),!, imprime_valoracoes(L,L,O))).
+imprime_valoracoes(L,[X|R],[[V1|V2]|O]):- write("v("), write(X), write(") = "), write(V1), (not(V2=[]) -> write(" e "),imprime_valoracoes(L,R,[V2|O]); (not(O=[]) -> nl, write("ou "), imprime_valoracoes(L,L,O);imprime_valoracoes(L,L,O))).
 
 
 /* ************** Exercicio 1 ************** */
@@ -130,7 +130,7 @@ exercicio1(L) :- simbolos_conjunto(L,C), juntar_conjunto(L,F), todas_valoracoes_
 
 /*elimina/3 é tal que elimina(X,L1,L2) é verdadeiro se L2 é a lista que resulta de retirar
 da lista L1 todas as ocorrências do elemento X*/
-elimina(X,[],[]).
+elimina(_,[],[]).
 elimina(X,[X|L],L1):- elimina(X,L,L1).
 elimina(X,[Y|L],[Y|L1]):- not(Y=X), elimina(X,L,L1).
 
@@ -151,7 +151,7 @@ exercicio2(L,F):- juntar_conjunto(L,V), J= V imp F, todas_valoracoes_satisfazem(
 /* -------------------------------------------------------*/
 
 /*junta_elem_listaconj/3 é tal que junta_elem_listaconj(E,L1,L2) é verdadeiro se ..........!!!!!*/
-junta_elem_listaconj(E,[],[]).
+junta_elem_listaconj(_,[],[]).
 junta_elem_listaconj(E,[X|R],[[E|X]|S]):- junta_elem_listaconj(E,R,S).
 
 /*partes/2 é tal que partes(L,P) é verdadeiro se P é o conjunto das partes do conjunto L*/
@@ -165,7 +165,7 @@ aux_conseq_semantica(L,F):- juntar_conjunto(L,V), J= V imp F, todas_valoracoes_s
 predicado(C,F,V):- partes(C,P),todas_conseq_semantica(P,F,V).
 todas_conseq_semantica([],_,[]).
 todas_conseq_semantica([X|R], F, [X|T]) :- aux_conseq_semantica(X,F), todas_conseq_semantica(R,F,T).
-todas_conseq_semantica([X|R],F,T) :- todas_conseq_semantica(R,F,T).
+todas_conseq_semantica([_|R],F,T) :- todas_conseq_semantica(R,F,T).
 
 
 membro_listas([],_,_).
@@ -175,7 +175,7 @@ membro_listas([X|R],[_|L],Y) :- membro_listas([X|R],L,Y).
 
 predicado([X|[]],[X]).
 predicado([X|R],L) :- membro_listas(X,R,Y),!,elimina(Y,R,T), predicado([X|T],Q), concatena([X],Q,E),eliminarep(E,L).
-predicado([X|R],L) :- predicado(R,L).
+predicado([_|R],L) :- predicado(R,L).
 
 minimais(C,F,L) :- predicado(C,F,T), predicado(T,L).
 
