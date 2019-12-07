@@ -174,12 +174,12 @@ membro_listas([X|R],[_|L],Y) :- membro_listas([X|R],L,Y).
 
 
 predicado([X|[]],[X]).
-predicado([X|R],L) :- membro_listas(X,R,Y),!, elimina(Y,R,T), predicado([X|T],Q), concatena([X],Q,E),eliminarep(E,L).
+predicado([X|R],[X|L]) :- membro_listas(X,R,Y),!, elimina(Y,R,T), predicado([X|T],L).
 predicado([_|R],L) :- predicado(R,L).
 
 minimais(C,F,L) :- predicado(C,F,T), predicado(T,L).
 
 
 /* ************** Exercicio 3 ************** */
-exercicio3(C,F) :- (minimais(C,F,L) -> write("O conjunto de todos os subconjuntos minimais de "), write(C), write(" dos quais '"), write(F), write("' e consequencia semantica sao: "), nl, write(L); write("Nao existe nenhum subconjunto de "), write(C), write(" que tenha como consequencia semantica a formula '"), write(F), write("'.")), !.
+exercicio3(C,F) :- (minimais(C,F,R), eliminarep(R,L) -> write("O conjunto de todos os subconjuntos minimais de "), write(C), write(" dos quais '"), write(F), write("' e consequencia semantica sao: "), nl, write(L); write("Nao existe nenhum subconjunto de "), write(C), write(" que tenha como consequencia semantica a formula '"), write(F), write("'.")), !.
 
