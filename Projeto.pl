@@ -123,7 +123,7 @@ imprime_valoracoes(L,[X|R],[[V1|V2]|O]):- write("v("), write(X), write(") = "), 
 
 /* ************** Exercicio 1 ************** */
 /*exercicio1/1 é tal que exercicio1(L) recebe um conjunto de formulas L e devolve a informacao de todas as valoracoes que satisfazem esse conjunto*/
-exercicio1(L) :- simbolos_conjunto(L,C), juntar_conjunto(L,F), todas_valoracoes_satisfazem(F,V), (V=[] -> write("Nao existe nenhuma valoracao que satisfaca todas as formulas do conjunto: "), write(L); imprime_valoracoes(C,C,V)).
+exercicio1(L) :- simbolos_conjunto(L,C), juntar_conjunto(L,F), todas_valoracoes_satisfazem(F,V), (V=[] -> write("Nao existe nenhuma valoracao que satisfaca todas as formulas do conjunto: "), write(L); imprime_valoracoes(C,C,V)),!.
 
 
 /* -------------------------------------------------------*/
@@ -143,8 +143,8 @@ elimina_lista([X|R],T,L):- elimina(X,T,P), elimina_lista(R,P,L).
 
 /* ************** Exercicio 2 ************** */
 /*exercicio2/2 é tal que exercicio2(L,F) é verdadeiro se F é consequencia semantica do conjunto de formulas L*/
-exercicio2([],F):- todas_valoracoes_satisfazem(F,T), simbolos_formula(F,Q),comprimento(Q,N), todas_listas_0s_1s(N,E), elimina_lista(T,E,O),(O=[] -> write("'"), write(F), write("'' e consequencia semantica de "),nl,write("[]"),nl;  write("'"), write(F),write("' nao e consequencia semantica de "),write("[]"),nl,write("Uma valoracao que nao verifica este facto e, por exemplo: "),!, imprime_valoracoes(Q,Q,O),!).
-exercicio2(L,F):- juntar_conjunto(L,V), J= V imp F, todas_valoracoes_satisfazem(J,T), simbolos_formula(J,Q),comprimento(Q,N), todas_listas_0s_1s(N,E), elimina_lista(T,E,O),(O=[] -> write("'"), write(F), write("'' e consequencia semantica de "), write(L),nl; write("'"), write(F), write("' nao e consequencia semantica de "),write(L),nl,write("Uma valoracao que nao verifica este facto e, por exemplo: "),!, imprime_valoracoes(Q,Q,O),!).
+exercicio2([],F):- todas_valoracoes_satisfazem(F,T), simbolos_formula(F,Q),comprimento(Q,N), todas_listas_0s_1s(N,E), elimina_lista(T,E,O),(O=[] -> write("'"), write(F), write("'' e consequencia semantica de "),nl,write("[]"),nl;  write("'"), write(F),write("' nao e consequencia semantica de "),write("[]"),nl,write("Uma valoracao que nao verifica este facto e, por exemplo: "),!, imprime_valoracoes(Q,Q,O),!), !.
+exercicio2(L,F):- juntar_conjunto(L,V), J= V imp F, todas_valoracoes_satisfazem(J,T), simbolos_formula(J,Q),comprimento(Q,N), todas_listas_0s_1s(N,E), elimina_lista(T,E,O),(O=[] -> write("'"), write(F), write("'' e consequencia semantica de "), write(L),nl; write("'"), write(F), write("' nao e consequencia semantica de "),write(L),nl,write("Uma valoracao que nao verifica este facto e, por exemplo: "),!, imprime_valoracoes(Q,Q,O),!), !.
 
 
 
@@ -181,5 +181,5 @@ minimais(C,F,L) :- predicado(C,F,T), predicado(T,L).
 
 
 /* ************** Exercicio 3 ************** */
-exercicio3(C,F):- (minimais(C,F,L) -> write("O conjunto de todos os subconjuntos minimais de "), write(C), write(" dos quais '"), write(F), write("' e consequencia semantica sao: "),nl, write(L); write("Nao existe nenhum subconjunto de "), write(C), write(" que tenha como consequencia semantica a formula '"), write(F), write("'.")).
+exercicio3(C,F):- (minimais(C,F,L) -> write("O conjunto de todos os subconjuntos minimais de "), write(C), write(" dos quais '"), write(F), write("' e consequencia semantica sao: "),nl, write(L); write("Nao existe nenhum subconjunto de "), write(C), write(" que tenha como consequencia semantica a formula '"), write(F), write("'.")), !.
 
