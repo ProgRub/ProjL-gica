@@ -97,7 +97,8 @@ valoracao_satisfaz(F,S,[_|T],R) :- valoracao_satisfaz(F,S,T,R).
 juntar_conjunto([X|[]],X).
 juntar_conjunto([H|R],P) :- juntar_conjunto(R,T),P= H e T.
 
-
+/*imprime_valoracoes/3 é tal que imprime_valoracoes(L,L,X) recebe uma lista L de simbolos proposicionais de uma dada formula e uma lista X com todas as valoracoes que satisfazem
+a mesma formula, e imprime as valoracoes correspondentes a cada simbolo proposicional que permite satisfazer a formula.*/
 imprime_valoracoes(L,L,[]).
 imprime_valoracoes([],[],[]).
 imprime_valoracoes(L,[X|R],[[V1|V2]|O]) :- write("v("), write(X), write(") = "), write(V1), (not(V2=[]) -> write(" e "),imprime_valoracoes(L,R,[V2|O]); (not(O=[]) -> nl, write("ou "), imprime_valoracoes(L,L,O);imprime_valoracoes(L,L,O))).
@@ -107,6 +108,10 @@ imprime_valoracoes(L,[X|R],[[V1|V2]|O]) :- write("v("), write(X), write(") = "),
 /*exercicio1/1 é tal que exercicio1(L) recebe um conjunto de formulas L e devolve a informacao de todas as valoracoes que satisfazem esse conjunto*/
 exercicio1(L) :- simbolos_conjunto(L,C), juntar_conjunto(L,F), todas_valoracoes_satisfazem(F,V), (V=[] -> write("Nao existe nenhuma valoracao que satisfaca todas as formulas do conjunto: "), write(L); imprime_valoracoes(C,C,V)),!.
 
+/*Exemplos de objetivos que podem ser executados para testar o programa:
+ - existem valoracoes que satisfazem: exercicio1([p imp (neg r imp q),r ou (p e q)])
+ - nao existem valoracoes que satisfazem: exercicio1([(p ou q) imp neg r, q e r])
+ */
 
 /* -------------------------------------------------------*/
 
@@ -126,6 +131,10 @@ elimina_lista([X|R],T,L) :- elimina(X,T,P), elimina_lista(R,P,L).
 exercicio2([],F) :- todas_valoracoes_satisfazem(F,T), simbolos_formula(F,Q), comprimento(Q,N), todas_listas_0s_1s(N,E), elimina_lista(T,E,O), (O=[] -> write("'"), write(F), write("' e consequencia semantica de "), nl,write("[]"), nl;  write("'"), write(F), write("' nao e consequencia semantica de "), write("[]"), nl, write("Uma valoracao que nao verifica este facto e, por exemplo: "), imprime_valoracoes(Q,Q,O)), !.
 exercicio2(L,F) :- juntar_conjunto(L,V), J= V imp F, todas_valoracoes_satisfazem(J,T), simbolos_formula(J,Q), comprimento(Q,N), todas_listas_0s_1s(N,E), elimina_lista(T,E,O), (O=[] -> write("'"), write(F), write("' e consequencia semantica de "), write(L), nl; write("'"), write(F), write("' nao e consequencia semantica de "), write(L),nl, write("Uma valoracao que nao verifica este facto e, por exemplo: "), O= [B|_], imprime_valoracoes(Q,Q,[B])), !.
 
+/*Exemplos de objetivos que podem ser executados para testar o programa:
+ - e consequencia semantica: exercicio2([p imp (r imp q), r ou q], p imp q)
+ - nao e consequencia semantica: exercicio2([p imp (r imp q), r ou q], q)
+ */
 
 
 /* -------------------------------------------------------*/
@@ -165,5 +174,10 @@ minimais(C,F,L) :- lista_conseq_semanticas(C,F,T), minimais_aux(T,R), eliminarep
 
 
 /* ************** Exercicio 3 ************** */
-exercicio3(C,F) :- (minimais(C,F,L)-> write("O conjunto de todos os subconjuntos minimais de "), write(C), write(" dos quais '"), write(F), write("' e consequencia semantica sao: "), nl, write(L); write("Nao existe nenhum subconjunto de "), write(C), write(" que tenha como consequencia semantica a formula '"), write(F), write("'.")), !.
+/*exercicio3/2 é tal que é imprimida a informacao do conjunto de todos os subconjuntos minimais do conjunto de formulas C dos quais a formula F é conquencia semantica*/
+exercicio3(C,F) :- (minimais(C,F,L) -> write("O conjunto de todos os subconjuntos minimais de "), write(C), write(" dos quais '"), write(F), write("' e consequencia semantica e: "), nl, write(L); write("Nao existe nenhum subconjunto de "), write(C), write(" que tenha como consequencia semantica a formula '"), write(F), write("'.")), !.
 
+/*Exemplos de objetivos que podem ser executados para testar o programa:
+ - existem subconjuntos como conquencia semantica: exercicio3([p imp q, p ou q,p,q],q)
+ - nao existem subconjuntos como conquencia semantica: exercicio3([p imp q, p ou q,q],p e q)
+ */
