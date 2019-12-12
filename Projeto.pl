@@ -46,8 +46,7 @@ enesimo(N,[_|L],Y) :- enesimo(N1,L,Y), N is N1+1.
 
 /* calc_valor/4 é tal que ao executar uma consulta do tipo calc_valor(F,S,L,V) onde F é uma fórmula da Linguagem neg, e, ou e imp, S é uma lista, sem repetições, dos símbolos proposicionais que ocorrem
 em dita fórmula e L uma lista de 0s e 1s com o mesmo comprimento da lista S, o interpretador Prolog devolverá V, o valor lógico de F por qualquer
-valoração v que atribui a cada símbolo proposicional da lista S o valor
-lógico que ocorre na posição correspondente na lista L*/
+valoração v que atribui a cada símbolo proposicional da lista S o valor lógico que ocorre na posição correspondente na lista L*/
 calc_valor(F,L1,L2,V) :- enesimo(N,L1,F), enesimo(N,L2,V).
 calc_valor(neg X,L1,L2,0) :- calc_valor(X,L1,L2,1).
 calc_valor(neg X,L1,L2,1) :- calc_valor(X,L1,L2,0).
@@ -111,14 +110,12 @@ exercicio1(L) :- simbolos_conjunto(L,C), juntar_conjunto(L,F), todas_valoracoes_
 
 /* -------------------------------------------------------*/
 
-/*elimina/3 é tal que elimina(X,L1,L2) é verdadeiro se L2 é a lista que resulta de retirar
-da lista L1 todas as ocorrências do elemento X*/
+/*elimina/3 é tal que elimina(X,L1,L2) é verdadeiro se L2 é a lista que resulta de retirar da lista L1 todas as ocorrências do elemento X*/
 elimina(_,[],[]).
 elimina(X,[X|L],L1) :- elimina(X,L,L1).
 elimina(X,[Y|L],[Y|L1]) :- not(Y=X), elimina(X,L,L1).
 
-/*elimina_lista/3 é tal que elimina_lista(X,Y,L) é verdadeiro se L é a lista que resulta de retirar
-da lista Y todas as ocorrências dos elementos da lista X*/
+/*elimina_lista/3 é tal que elimina_lista(X,Y,L) é verdadeiro se L é a lista que resulta de retirar da lista Y todas as ocorrências dos elementos da lista X*/
 elimina_lista([],L,L).
 elimina_lista([X|R],T,L) :- elimina(X,T,P), elimina_lista(R,P,L).
 
