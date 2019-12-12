@@ -9,7 +9,7 @@ Rúben José Gouveia Rodrigues (2046018)
 */
 
 
-% Predicados auxiliares (conetivos)
+/* Predicados auxiliares (conetivos)*/
 :-op(100, fy, 'neg').
 :-op(200, xfy, 'e').
 :-op(300, xfy, 'ou').
@@ -106,6 +106,9 @@ imprime_valoracoes(L,[X|R],[[V1|V2]|O]) :- write("v("), write(X), write(") = "),
 
 /* ************** Exercicio 1 ************** */
 /*exercicio1/1 é tal que exercicio1(L) recebe um conjunto de formulas L e devolve a informacao de todas as valoracoes que satisfazem esse conjunto*/
+/*Baseamos o nosso raciocinio no facto de uma valoração satisfazer um conjunto de fórmulas ser equivalente a essa valoração satisfazer a fórmula obtida de juntar todas as fórmulas do conjunto com e´s
+Logo, a funçao simbolos_conjunto descobrirá os simbolos proposicionais presentes no conjunto de fórmulas, para o imprimir das valorações, juntar_conjunto juntará todas as fórmulas do conjuntos usando e´s , de modo a obter uma fórmula
+E obtemos as valoracoes que satisfazem a fórmula mencionada anteriormente, e é mostrado ao utilizador as valorações que satisfazem o conjunto, ou o facto de não haver valorações que satisfazem o conjunto*/
 exercicio1(L) :- simbolos_conjunto(L,C), juntar_conjunto(L,F), todas_valoracoes_satisfazem(F,V), (V=[] -> write("Nao existe nenhuma valoracao que satisfaca todas as formulas do conjunto: "), write(L); imprime_valoracoes(C,C,V)),!.
 
 /*Exemplos de objetivos que podem ser executados para testar o programa:
@@ -128,7 +131,13 @@ elimina_lista([X|R],T,L) :- elimina(X,T,P), elimina_lista(R,P,L).
 
 /* ************** Exercicio 2 ************** */
 /*exercicio2/2 é tal que exercicio2(L,F) é verdadeiro se F é consequencia semantica do conjunto de formulas L*/
-exercicio2([],F) :- todas_valoracoes_satisfazem(F,T), simbolos_formula(F,Q), comprimento(Q,N), todas_listas_0s_1s(N,E), elimina_lista(T,E,O), (O=[] -> write("'"), write(F), write("' e consequencia semantica de "), nl,write("[]"), nl;  write("'"), write(F), write("' nao e consequencia semantica de "), write("[]"), nl, write("Uma valoracao que nao verifica este facto e, por exemplo: "), imprime_valoracoes(Q,Q,O)), !.
+/*Baseamos o nosso raciocinio no facto de se F ser consequência semântica de C ser equivalente a (todas as fórmulas de C concatenadas com e´s) implica F ser tautologia, temos 2 casos:
+Se o conjunto de fórmulas é vazio, verificamos se F é uma tautologia, obtendo todas as valorações que satisfazem F, comparando essa lista com a lista de todas as valorações possíveis para a fórmula, por meio de eliminação,
+Isto é, usando o elimina_lista, vamos eliminar todas as valorações que satisfazem F do conjunto de todas as valorações possíveis e, se a lista obtida for [], então sabemos que é tautologia e informamos o utilizador de tal
+Se tal não acontecer, o utilizador é informado e também é informado uma valoração que não satisfaz, daí o elimina_lista, o resulta desta clausula é a lista de valorações que prova que F não é tautologia, e assim damos o exemplo ao utilizador.
+Se o conjunto não for vazio, o raciocinio é o mesmo, só que junta-se as fórmulas do conjunto com e´s ,  graças à clausula juntar_conjunto, e juntamos a fórmula resultante com a fórmula que queremos ver se é consequência semântica
+Com um implica, como a propriedade diz, e de seguida o procedimento é idêntico ao indicado anteriormente, para a fórmula J= V imp F.*/
+exercicio2([],F) :- todas_valoracoes_satisfazem(F,T), simbolos_formula(F,Q), comprimento(Q,N), todas_listas_0s_1s(N,E), elimina_lista(T,E,O), (O=[] -> write("'"), write(F), write("' e tautologia."), nl;  write("'"), write(F), write("' nao e tautologia."), nl, write("Uma valoracao que nao verifica este facto e, por exemplo: "), imprime_valoracoes(Q,Q,O)), !.
 exercicio2(L,F) :- juntar_conjunto(L,V), J= V imp F, todas_valoracoes_satisfazem(J,T), simbolos_formula(J,Q), comprimento(Q,N), todas_listas_0s_1s(N,E), elimina_lista(T,E,O), (O=[] -> write("'"), write(F), write("' e consequencia semantica de "), write(L), nl; write("'"), write(F), write("' nao e consequencia semantica de "), write(L),nl, write("Uma valoracao que nao verifica este facto e, por exemplo: "), O= [B|_], imprime_valoracoes(Q,Q,[B])), !.
 
 /*Exemplos de objetivos que podem ser executados para testar o programa:
@@ -147,9 +156,11 @@ junta_elem_listaconj(E,[X|R],[[E|X]|S]) :- junta_elem_listaconj(E,R,S).
 partes([],[[]]).
 partes([X|R],P) :- partes(R,S), junta_elem_listaconj(X,S,T), concatena(S,T,P).
 
-/*conseq_semantica/2 é tal que conseq_semantica(L,F) se F é consequencia semantica de L*/
-conseq_semantica([],F) :- todas_valoracoes_satisfazem(F,T), simbolos_formula(F,Q),comprimento(Q,N), todas_listas_0s_1s(N,E), elimina_lista(T,E,O), O=[].
-conseq_semantica(L,F) :- juntar_conjunto(L,V), J= V imp F, todas_valoracoes_satisfazem(J,T), simbolos_formula(J,Q),comprimento(Q,N), todas_listas_0s_1s(N,E), elimina_lista(T,E,O),O=[].
+/*conseq_semantica/2 é tal que conseq_semantica(L,F) se F é consequencia semantica de L
+O raciocinio usado aqui é o raciocinio usado no exercicio2, só que já não é utilizado o elimina_lista pois esta clausula já não informará o utilizador de nada, é uma clausula auxiliar ao todas_conseq_semantica
+Por isso, simplesmente compara-se a lista de valorações que satisfazem o facto de F ser consequência semântica de L com todas as valorações possíveis, se as listas são iguais, então F é consequência semântica de L*/
+conseq_semantica([],F) :- todas_valoracoes_satisfazem(F,T), simbolos_formula(F,Q),comprimento(Q,N), todas_listas_0s_1s(N,E), T=E,!.
+conseq_semantica(L,F) :- juntar_conjunto(L,V), J= V imp F, todas_valoracoes_satisfazem(J,T), simbolos_formula(J,Q),comprimento(Q,N), todas_listas_0s_1s(N,E),T=E,!.
 
 /*lista_conseq_semanticas/3 é tal que lista_conseq_semanticas(C,F,L) é verdadeiro se L é a lista de todos os subconjuntos de C tal que F é consequencia semantica dos subconjuntos*/
 lista_conseq_semanticas(C,F,V) :- partes(C,P), todas_conseq_semantica(P,F,V).
@@ -159,7 +170,8 @@ todas_conseq_semantica([],_,[]).
 todas_conseq_semantica([X|R], F, [X|T]) :- conseq_semantica(X,F), todas_conseq_semantica(R,F,T).
 todas_conseq_semantica([_|R],F,T) :- todas_conseq_semantica(R,F,T).
 
-/*membro_listas/3 é tal que membro_listas(L,T,X), é verdadeiro se X é uma lista da lista T tal que todos os elementos da lista L são membros da lista X*/
+/*membro_listas/3 é tal que membro_listas(L,T,X), é verdadeiro se X é uma lista da lista T tal que todos os elementos da lista L são membros da lista X
+Esta clausula será util para saber os conjuntos minimais pois se esta clausula é verdade, todos os membros de L estão na lista X da lista T e procedemos a eliminar a lista X, como se pode ver na clausula minimais_aux*/
 membro_listas([],_,_).
 membro_listas([X|R],[Y|L],Y) :- membro(X,Y), membro_listas(R,[Y|L],Y).
 membro_listas([X|R],[_|L],Y) :- membro_listas([X|R],L,Y).
