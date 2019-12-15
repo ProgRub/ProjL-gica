@@ -1,4 +1,4 @@
-/*Projeto Lógica*/
+/*Projeto Lógica Computacional*/
 
 /*
 Elementos do grupo:
@@ -112,8 +112,8 @@ E obtemos as valoracoes que satisfazem a fórmula mencionada anteriormente, e é
 exercicio1(L) :- simbolos_conjunto(L,C), juntar_conjunto(L,F), todas_valoracoes_satisfazem(F,V), (V=[] -> write("Nao existe nenhuma valoracao que satisfaca todas as formulas do conjunto: "), write(L); imprime_valoracoes(C,C,V)),!.
 
 /*Exemplos de objetivos que podem ser executados para testar o programa:
- - existem valoracoes que satisfazem: exercicio1([p imp (neg r imp q),r ou (p e q)])
- - nao existem valoracoes que satisfazem: exercicio1([(p ou q) imp neg r, q e r])
+ - existem valoracoes que satisfazem: exercicio1([p imp (neg r imp q),r ou (p e q)]).
+ - nao existem valoracoes que satisfazem: exercicio1([(p ou q) imp neg r, q e r]).
  */
 
 /* -------------------------------------------------------*/
@@ -131,18 +131,18 @@ elimina_lista([X|R],T,L) :- elimina(X,T,P), elimina_lista(R,P,L).
 
 /* ************** Exercicio 2 ************** */
 /*exercicio2/2 é tal que exercicio2(L,F) é verdadeiro se F é consequencia semantica do conjunto de formulas L*/
-/*Baseamos o nosso raciocinio no facto de se F ser consequência semântica de C ser equivalente a (todas as fórmulas de C concatenadas com e´s) implica F ser tautologia, temos 2 casos:
+/*Baseamos o nosso raciocinio no facto de ´F ser consequência semântica de C´ ser equivalente a ´(todas as fórmulas de C concatenadas com e´s) implica F´ ser tautologia, temos 2 casos:
 Se o conjunto de fórmulas é vazio, verificamos se F é uma tautologia, obtendo todas as valorações que satisfazem F, comparando essa lista com a lista de todas as valorações possíveis para a fórmula, por meio de eliminação,
 Isto é, usando o elimina_lista, vamos eliminar todas as valorações que satisfazem F do conjunto de todas as valorações possíveis e, se a lista obtida for [], então sabemos que é tautologia e informamos o utilizador de tal
-Se tal não acontecer, o utilizador é informado e também é informado uma valoração que não satisfaz, daí o elimina_lista, o resulta desta clausula é a lista de valorações que prova que F não é tautologia, e assim damos o exemplo ao utilizador.
+Se tal não acontecer, o utilizador é informado e também é informado uma valoração que não satisfaz, daí o elimina_lista, o resultado desta clausula é a lista de valorações que prova que F não é tautologia, e assim damos o exemplo ao utilizador.
 Se o conjunto não for vazio, o raciocinio é o mesmo, só que junta-se as fórmulas do conjunto com e´s ,  graças à clausula juntar_conjunto, e juntamos a fórmula resultante com a fórmula que queremos ver se é consequência semântica
 Com um implica, como a propriedade diz, e de seguida o procedimento é idêntico ao indicado anteriormente, para a fórmula J= V imp F.*/
 exercicio2([],F) :- todas_valoracoes_satisfazem(F,T), simbolos_formula(F,Q), comprimento(Q,N), todas_listas_0s_1s(N,E), elimina_lista(T,E,O), (O=[] -> write("'"), write(F), write("' e tautologia."), nl;  write("'"), write(F), write("' nao e tautologia."), nl, write("Uma valoracao que nao verifica este facto e, por exemplo: "), imprime_valoracoes(Q,Q,O)), !.
 exercicio2(L,F) :- juntar_conjunto(L,V), J= V imp F, todas_valoracoes_satisfazem(J,T), simbolos_formula(J,Q), comprimento(Q,N), todas_listas_0s_1s(N,E), elimina_lista(T,E,O), (O=[] -> write("'"), write(F), write("' e consequencia semantica de "), write(L), nl; write("'"), write(F), write("' nao e consequencia semantica de "), write(L),nl, write("Uma valoracao que nao verifica este facto e, por exemplo: "), O= [B|_], imprime_valoracoes(Q,Q,[B])), !.
 
 /*Exemplos de objetivos que podem ser executados para testar o programa:
- - e consequencia semantica: exercicio2([p imp (r imp q), r ou q], p imp q)
- - nao e consequencia semantica: exercicio2([p imp (r imp q), r ou q], q)
+ - e consequencia semantica: exercicio2([p imp (r imp q), r ou q], p imp q).
+ - nao e consequencia semantica: exercicio2([p imp (r imp q), r ou q], q).
  */
 
 
@@ -190,6 +190,6 @@ minimais(C,F,L) :- lista_conseq_semanticas(C,F,T), minimais_aux(T,R), eliminarep
 exercicio3(C,F) :- (minimais(C,F,L) -> write("O conjunto de todos os subconjuntos minimais de "), write(C), write(" dos quais '"), write(F), write("' e consequencia semantica e: "), nl, write(L); write("Nao existe nenhum subconjunto de "), write(C), write(" que tenha como consequencia semantica a formula '"), write(F), write("'.")), !.
 
 /*Exemplos de objetivos que podem ser executados para testar o programa:
- - existem subconjuntos como conquencia semantica: exercicio3([p imp q, p ou q,p,q],q)
- - nao existem subconjuntos como conquencia semantica: exercicio3([p imp q, p ou q,q],p e q)
+ - existem subconjuntos como conquencia semantica: exercicio3([p imp q, p ou q,p,q],q).
+ - nao existem subconjuntos como conquencia semantica: exercicio3([p imp q, p ou q,q],p e q).
  */
