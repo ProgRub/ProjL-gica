@@ -109,7 +109,7 @@ imprime_valoracoes(L,[X|R],[[V1|V2]|O]) :- write("v("), write(X), write(") = "),
 /*Baseamos o nosso raciocinio no facto de uma valoração satisfazer um conjunto de fórmulas ser equivalente a essa valoração satisfazer a fórmula obtida de juntar todas as fórmulas do conjunto com e´s
 Logo, a funçao simbolos_conjunto descobrirá os simbolos proposicionais presentes no conjunto de fórmulas, para o imprimir das valorações, juntar_conjunto juntará todas as fórmulas do conjuntos usando e´s , de modo a obter uma fórmula
 E obtemos as valoracoes que satisfazem a fórmula mencionada anteriormente, e é mostrado ao utilizador as valorações que satisfazem o conjunto, ou o facto de não haver valorações que satisfazem o conjunto*/
-exercicio1(L) :- simbolos_conjunto(L,C), juntar_conjunto(L,F), todas_valoracoes_satisfazem(F,V), (V=[] -> write("Nao existe nenhuma valoracao que satisfaca todas as formulas do conjunto: "), write(L); imprime_valoracoes(C,C,V)),!.
+exercicio1(L) :- simbolos_conjunto(L,C), write("O conjunto de simbolos proposicionais do conjunto de formulas "), write(L), write(" �: "), write(C),nl, juntar_conjunto(L,F), write("As formulas do conjunto s�o satisfeitas, por qualquer valora��o v, tal que: "),nl, todas_valoracoes_satisfazem(F,V), (V=[] -> write("N�o existe nenhuma valora��o que satisfa�a todas as formulas do conjunto: "), write(L); imprime_valoracoes(C,C,V)),!.
 
 /*Exemplos de objetivos que podem ser executados para testar o programa:
  - existem valoracoes que satisfazem: exercicio1([p imp (neg r imp q),r ou (p e q)]).
