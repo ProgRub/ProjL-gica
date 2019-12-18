@@ -109,11 +109,16 @@ imprime_valoracoes(L,[X|R],[[V1|V2]|O]) :- write("v("), write(X), write(") = "),
 /*Baseamos o nosso raciocinio no facto de uma valoração satisfazer um conjunto de fórmulas ser equivalente a essa valoração satisfazer a fórmula obtida de juntar todas as fórmulas do conjunto com e´s
 Logo, a funçao simbolos_conjunto descobrirá os simbolos proposicionais presentes no conjunto de fórmulas, para o imprimir das valorações, juntar_conjunto juntará todas as fórmulas do conjuntos usando e´s , de modo a obter uma fórmula
 E obtemos as valoracoes que satisfazem a fórmula mencionada anteriormente, e é mostrado ao utilizador as valorações que satisfazem o conjunto, ou o facto de não haver valorações que satisfazem o conjunto*/
-exercicio1(L) :- simbolos_conjunto(L,C), write("O conjunto de simbolos proposicionais do conjunto de formulas "), write(L), write(" �: "), write(C),nl, juntar_conjunto(L,F), write("As formulas do conjunto s�o satisfeitas, por qualquer valora��o v, tal que: "),nl, todas_valoracoes_satisfazem(F,V), (V=[] -> write("N�o existe nenhuma valora��o que satisfa�a todas as formulas do conjunto: "), write(L); imprime_valoracoes(C,C,V)),!.
+exercicio1(L) :- simbolos_conjunto(L,C), write("O conjunto de simbolos proposicionais do conjunto de formulas "), write(L), write(" e: "), write(C),nl, juntar_conjunto(L,F),todas_valoracoes_satisfazem(F,V), (V=[] -> write("Nao existe nenhuma valoracao que satisfaca todas as formulas do conjunto: "), write(L); write("As formulas do conjunto sao satisfeitas, por qualquer valoracao v, tal que: "),nl, imprime_valoracoes(C,C,V)),!.
 
 /*Exemplos de objetivos que podem ser executados para testar o programa:
- - existem valoracoes que satisfazem: exercicio1([p imp (neg r imp q),r ou (p e q)]).
- - nao existem valoracoes que satisfazem: exercicio1([(p ou q) imp neg r, q e r]).
+ - existem valoracoes que satisfazem: 
+ exercicio1([p imp (neg r imp q),r ou (p e q)]).
+ exercicio1([p imp q, q imp r, q imp t, neg(r e t)]).
+
+ - nao existem valoracoes que satisfazem: 
+ exercicio1([(p ou q) imp neg r, q e r]).
+ exercicio1([p imp neg q, q imp neg r, p e neg p]).
  */
 
 /* -------------------------------------------------------*/
@@ -141,8 +146,13 @@ exercicio2([],F) :- todas_valoracoes_satisfazem(F,T), simbolos_formula(F,Q), com
 exercicio2(L,F) :- juntar_conjunto(L,V), J= V imp F, todas_valoracoes_satisfazem(J,T), simbolos_formula(J,Q), comprimento(Q,N), todas_listas_0s_1s(N,E), elimina_lista(T,E,O), (O=[] -> write("'"), write(F), write("' e consequencia semantica de "), write(L), nl; write("'"), write(F), write("' nao e consequencia semantica de "), write(L),nl, write("Uma valoracao que nao verifica este facto e, por exemplo: "), O= [B|_], imprime_valoracoes(Q,Q,[B])), !.
 
 /*Exemplos de objetivos que podem ser executados para testar o programa:
- - e consequencia semantica: exercicio2([p imp (r imp q), r ou q], p imp q).
- - nao e consequencia semantica: exercicio2([p imp (r imp q), r ou q], q).
+ - e consequencia semantica:
+ exercicio2([p imp (r imp q), r ou q], p imp q).
+ exercicio2([p imp q, q imp r, q imp t, neg(r e t)], neg p).
+
+ - nao e consequencia semantica: 
+ exercicio2([p imp (r imp q), r ou q], q).
+ exercicio2([neg t,t imp q, neg p ou q], q).
  */
 
 
@@ -190,6 +200,11 @@ minimais(C,F,L) :- lista_conseq_semanticas(C,F,T), minimais_aux(T,R), eliminarep
 exercicio3(C,F) :- (minimais(C,F,L) -> write("O conjunto de todos os subconjuntos minimais de "), write(C), write(" dos quais '"), write(F), write("' e consequencia semantica e: "), nl, write(L); write("Nao existe nenhum subconjunto de "), write(C), write(" que tenha como consequencia semantica a formula '"), write(F), write("'.")), !.
 
 /*Exemplos de objetivos que podem ser executados para testar o programa:
- - existem subconjuntos como conquencia semantica: exercicio3([p imp q, p ou q,p,q],q).
- - nao existem subconjuntos como conquencia semantica: exercicio3([p imp q, p ou q,q],p e q).
+ - existem subconjuntos minimais como conquencia semantica: 
+ exercicio3([p imp q, p ou q,p,q],q).
+ exercicio3([p imp q, p ou q,p ou r,p], r imp p).
+
+ - nao existem subconjuntos minimais como conquencia semantica: 
+ exercicio3([p imp q, p ou q,q],p e q).
+ exercicio3([p imp q, p ou q,p ou r, r imp q], r).
  */
