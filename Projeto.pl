@@ -137,7 +137,7 @@ elimina_lista([X|R],T,L) :- elimina(X,T,P), elimina_lista(R,P,L).
 
 /* ************** Exercicio 2 ************** */
 /*exercicio2/2 é tal que exercicio2(L,F) é verdadeiro se F é consequencia semantica do conjunto de formulas L*/
-/*Baseamos o nosso raciocinio no facto de ´F ser consequência semântica de C´ ser equivalente a ´(todas as fórmulas de C concatenadas com e´s) implica F´ ser tautologia, temos 2 casos:
+/*Baseamos o nosso raciocinio no facto de F ser consequência semântica de C´ ser equivalente a ´(todas as fórmulas de C concatenadas com e´s) implica F´ ser tautologia, temos 2 casos:
 Se o conjunto de fórmulas é vazio, verificamos se F é uma tautologia, obtendo todas as valorações que satisfazem F, comparando essa lista com a lista de todas as valorações possíveis para a fórmula, por meio de eliminação,
 Isto é, usando o elimina_lista, vamos eliminar todas as valorações que satisfazem F do conjunto de todas as valorações possíveis e, se a lista obtida for [], então sabemos que é tautologia e informamos o utilizador de tal
 Se tal não acontecer, o utilizador é informado e também é informado uma valoração que não satisfaz, daí o elimina_lista, o resultado desta clausula é a lista de valorações que prova que F não é tautologia, e assim damos o exemplo ao utilizador.
