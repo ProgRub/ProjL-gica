@@ -197,7 +197,7 @@ minimais(C,F,L) :- lista_conseq_semanticas(C,F,T), minimais_aux(T,R), eliminarep
 
 /* ************** Exercicio 3 ************** */
 /*exercicio3/2 é tal que é imprimida a informacao do conjunto de todos os subconjuntos minimais do conjunto de formulas C dos quais a formula F é conquencia semantica*/
-exercicio3(C,F) :- (minimais(C,F,L) -> write("O conjunto de todos os subconjuntos minimais de "), write(C), write(" dos quais '"), write(F), write("' e consequencia semantica e: "), nl, write(L); write("Nao existe nenhum subconjunto de "), write(C), write(" que tenha como consequencia semantica a formula '"), write(F), write("'.")), !.
+exercicio3(C,F) :- (minimais(C,F,L) -> (L=[[]] -> write("A formula '"), write(F),write("' e tautologia."); write("O conjunto de todos os subconjuntos minimais de "), write(C), write(" dos quais '"), write(F), write("' e consequencia semantica e: "), nl, write(L)); write("Nao existe nenhum subconjunto de "), write(C), write(" que tenha como consequencia semantica a formula '"), write(F), write("'.")), !.
 
 /*Exemplos de objetivos que podem ser executados para testar o programa:
  - existem subconjuntos minimais como conquencia semantica: 
