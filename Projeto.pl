@@ -81,7 +81,7 @@ simb_prop(_ imp Y,I) :- simb_prop(Y,I).
 /*simbolos_formula/2 é tal que simbolos_formula(F,L) é verdadeiro se L é a lista com todos os simbolos proposicionais da formula F*/
 simbolos_formula(F,L) :- findall(U,simb_prop(F,U),T), eliminarep(T,L).
 
-/*simbolos_conjunto/2 é tal que simbolos_conjunto(L1,L2) é verdadeiro se L2 é a lista de todos os simbolos proposicionais que ocorrem nalguma formula da lista de formulas L1*/
+/*simbolos_conjunto/2 é tal que simbolos_conjunto(L1,L2) é verdadeiro se L2 é a lista de todos os simbolos proposicionais que ocorrem nalguma das formulas da lista de formulas L1*/
 simbolos_conjunto([],[]).
 simbolos_conjunto([F|R],L) :- simbolos_formula(F,T), simbolos_conjunto(R,U), concatena(T,U,Y), eliminarep(Y,L).
 
